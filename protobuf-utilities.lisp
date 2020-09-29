@@ -9,8 +9,8 @@
 (in-package :protobuf-utilities)
 
 (defun deserialize-proto-from-base64-string (proto-type proto-string)
-  "Deserialize a proto of type PROTO-TYPE from the base-64
-encoded string PROTO-STRING."
+  "Deserialize a proto of type PROTO-TYPE from the base64-encoded
+ string PROTO-STRING."
   (declare (type string proto-string))
   (let ((bytes (flexi-streams:string-to-octets
                 (cl-base64:base64-string-to-string proto-string))))
@@ -18,7 +18,7 @@ encoded string PROTO-STRING."
      proto-type bytes)))
 
 (defun serialize-proto-to-base64-string (proto)
-  "Serialize a PROTO to octets and call base64 encode"
+  "Serialize a PROTO to octets and call base64-encode"
   (cl-base64:string-to-base64-string
    (flexi-streams:octets-to-string
     (cl-protobufs:serialize-to-bytes proto))))
@@ -34,7 +34,7 @@ protos return to be serialized base64-encoded strings."
   `(let ,(loop for (message . message-type) in  message-message-type-list
                collect
                `(,message (deserialize-proto-from-base64-string
-                           ,message-type
+                           ',message-type
                            (or ,message ""))))
      ,@body))
 
@@ -48,6 +48,6 @@ protos return to be serialized base64-encoded strings."
   "Wrapper combining WITH-DESERIALIZED-PROTOS and serialize result of BODY.
 
 Useful in an http server context where you know your inputs will be protos which
-are contained in base64-encoded strings and you will want to return a base64 encoded
+are contained in base64-encoded strings and you will want to return a base64-encoded
 proto."
   `(serialize-result (with-deserialized-protos ,message-message-type-list ,@body)))
